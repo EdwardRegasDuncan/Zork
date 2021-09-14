@@ -5,6 +5,8 @@
 
 using namespace std;
 
+class Player;
+
 class Game
 {
 public:
@@ -13,8 +15,6 @@ public:
 
 	bool ParseCommand(vector<string>& args);
 
-private:
-
-
+	Player* player;
 };
 

@@ -27,7 +27,7 @@ int main() {
 			Tokenize(input, args);
 			game.ParseCommand(args);
 		}
-		input == "";
+		args.clear();
 		
 	}
 
