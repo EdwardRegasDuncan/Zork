@@ -13,10 +13,11 @@ Game::Game() {
 
 	Forest->AddConnection(House);
 	Forest->AddConnection(Lake);
-
 	House->AddConnection(Forest);
-
 	Lake->AddConnection(Forest);
+
+	Items* Stick = new Items("stick", "A sturdy looking stick", false);
+	Forest->AddItem(Stick);
 
 	player = new Player(Forest);
 
@@ -27,10 +28,11 @@ Game::~Game(){
 
 bool Game::ParseCommand(std::vector<std::string>& args) {
 
+	Location* currentLocation = player->currentLocation;
+
 	if (Same(args[0], "go")) {
 		if (args.size() < 2) {
 			cout << "Where do you want to go?\n";
-			Location* currentLocation = player->currentLocation;
 			cout << "You are currently at: " << currentLocation->name << "\n";
 			list<Location*> connections = currentLocation->connections;
 			for (Location* location : connections)
@@ -41,7 +43,6 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 		}
 		else {
 			cout << "you go to the " << (string)args[1] << "\n";
-			Location* currentLocation = player->currentLocation;
 			list<Location*> connections = currentLocation->connections;
 			for (Location* location : connections) {
 				if (Same(location->name, args[1])) {
@@ -49,10 +50,43 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 				}
 			}
 			return true;
-			//move to location
 		}
 	}
-	/*if (Same(args[0], "look")) {
-		return 0;
-	}*/
+	if (Same(args[0], "look")) {
+		if (args.size() < 2) {
+			list<Items*> itemsInLocation = currentLocation->items;
+			cout << "You look around the room and see: \n";
+			for (Items* item : itemsInLocation) {
+				cout << item->name << "\n";
+			}
+		}
+		return false;
+	}
+	if (Same(args[0], "Take")) {
+		if (args.size() < 2) {
+			cout << "What do you want to take?\n";
+		}
+		else if (args.size() < 3) {
+			list<Items*> itemsInLocation = currentLocation->items;
+			for (Items* item : itemsInLocation) {
+				if (Same(args[1], item->name)) {
+					player->Take(item);
+					currentLocation->RemoveItem(item);
+					cout << "You take the " << item->name << "\n";
+				}
+			}
+		}
+	}
+	if (Same(args[0], "Inventory") || Same(args[0], "inv") || Same(args[0], "i")) {
+		list<Items*> itemsInInv = player->inventory;
+		if (itemsInInv.size() < 1) {
+			cout << "You currently have nothing\n";
+			return false;
+		}
+		cout << "You check your inventory, you have: \n";
+		for (Items* item : itemsInInv) {
+			cout << item->name << "\n";
+		}
+		return true;
+	}
 }

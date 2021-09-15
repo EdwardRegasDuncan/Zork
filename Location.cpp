@@ -16,3 +16,10 @@ Location::~Location() {
 void Location::AddConnection(Location* target) {
 	connections.push_back(target);
 }
+
+void Location::AddItem(Items* item) {
+	items.push_back(item);
+}
+void Location::RemoveItem(Items* item) {
+	items.remove(item);
+}
