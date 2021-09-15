@@ -36,11 +36,13 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 
 	if (Same(args[0], "Help")) {
 		cout << "To play enter an action such as: \n";
+		cout << "Quit\n";
 		cout << "Go\n";
 		cout << "Look\n";
 		cout << "Take\n";
 		cout << "Drop\n";
 		cout << "Inventory / Inv / I\n";
+		cout << "Put [x] in [y]\n";
 		cout << "Some commands need context, for example: Take Stick or Go House\n";
 	}
 	if (Same(args[0], "go")) {
@@ -71,7 +73,7 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 	if (Same(args[0], "look")) {
 		if (args.size() < 2) {
 			list<Items*> itemsInLocation = currentLocation->items;
-			cout << "You look around the room and see: \n";
+			cout << "You look around and see: \n";
 			for (Items* item : itemsInLocation) {
 				cout << item->name << "\n";
 			}
@@ -124,6 +126,53 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 		}
 		return true;
 	}
+	if (Same(args[0], "Put")) {
+		for (int i = 0; i < args.size(); i++) {
+			if (Same(args[i], "in")) {
+				args.erase(args.begin()+i--);
+			}
+		}
+
+		if (args.size() < 2) {
+			cout << "Put what where?\n";
+			return false;
+		}
+		if (args.size() < 4) {
+			list<Items*> inventory = player->inventory;
+			Items* container = NULL;
+			Items* containee = NULL;
+			for (Items* item : inventory) {
+				if (Same(args[2], item->name)) {
+					if (!item->isContainer) {
+						cout << item->name << " is not a container for anything\n";
+						return false;
+					}
+					container = item;
+				}
+				else if (Same(args[1], item->name)) {
+					if (item->isContainer) {
+						cout << "You cannot put a container inside something else\n";
+						return false;
+					}
+					containee = item;
+				}
+			}
+			if (!container || !containee) {
+				cout << "You dont have these items\n";
+				return false;
+			}
+			container->Store(containee);
+			player->Drop(containee);
+			cout << "You put the " << containee->name << " into the " << container->name << "\n";
+			return true;
+		}
+	
+	}
+
+	if (Same(args[0], "Quit")) {
+		quick_exit(0);
+	}
+
 
 	cout << "Sorry I didn't understand that, do you need 'help' ?";
 	return false;
