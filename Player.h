@@ -8,15 +8,15 @@ using namespace std;
 class Player
 {
 public:
-	Player(Location currentLocation);
+	Player(Location* currentLocation);
 	~Player();
 
 	//functions
-	bool Go(Location location);
+	bool Go(Location* location);
 
 	
 public:
-	Location currentLocation;
+	Location* currentLocation;
 
 };
 

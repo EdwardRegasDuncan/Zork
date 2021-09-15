@@ -30,21 +30,21 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 	if (Same(args[0], "go")) {
 		if (args.size() < 2) {
 			cout << "Where do you want to go?\n";
-			Location currentLocation = player->GetCurrentLocation();
-			cout << "You are currently at: " << currentLocation.name << "\n";
-			list<Location> connections = currentLocation.connections;
-			for (Location location : connections)
+			Location* currentLocation = player->currentLocation;
+			cout << "You are currently at: " << currentLocation->name << "\n";
+			list<Location*> connections = currentLocation->connections;
+			for (Location* location : connections)
 			{
-				cout << location.name << "\n";
+				cout << location->name << "\n";
 			}
 			return false;
 		}
 		else {
 			cout << "you go to the " << (string)args[1] << "\n";
-			Location currentLocation = player->GetCurrentLocation();
-			list<Location> connections = currentLocation.connections;
-			for (Location location : connections) {
-				if (Same(location.name, args[1])) {
+			Location* currentLocation = player->currentLocation;
+			list<Location*> connections = currentLocation->connections;
+			for (Location* location : connections) {
+				if (Same(location->name, args[1])) {
 					player->Go(location);
 				}
 			}

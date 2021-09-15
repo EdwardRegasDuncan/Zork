@@ -12,7 +12,7 @@ public:
 
 	void AddConnection(Location* target);
 
-	list<Location> connections;
+	list<Location*> connections;
 	std::string name;
 	std::string description;
 };

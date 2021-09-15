@@ -14,5 +14,5 @@ Location::~Location() {
 }
 
 void Location::AddConnection(Location* target) {
-	connections.push_back(*target);
+	connections.push_back(target);
 }
