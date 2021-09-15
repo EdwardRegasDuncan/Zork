@@ -44,6 +44,7 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 		cout << "Inventory / Inv / I\n";
 		cout << "Put [x] in [y]\n";
 		cout << "Some commands need context, for example: Take Stick or Go House\n";
+		return true;
 	}
 	if (Same(args[0], "go")) {
 		if (args.size() < 2) {
@@ -67,7 +68,7 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 				}
 			}
 			cout << "You can't go there\n";
-			return true;
+			return false;
 		}
 	}
 	if (Same(args[0], "look")) {
@@ -92,9 +93,12 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 					player->Take(item);
 					currentLocation->RemoveItem(item);
 					cout << "You take the " << item->name << "\n";
+					return true;
 				}
 			}
-			return true;
+			cout << "You can't take that\n";
+			return false;
+			
 		}
 	}
 	if (Same(args[0], "Inventory") || Same(args[0], "inv") || Same(args[0], "i")) {
@@ -121,10 +125,12 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 					player->Drop(item);
 					currentLocation->AddItem(item);
 					cout << "You Drop the " << item->name << "\n";
+					return true;
 				}
 			}
+			cout << "You dont have this\n";
+			return false;
 		}
-		return true;
 	}
 	if (Same(args[0], "Put")) {
 		for (int i = 0; i < args.size(); i++) {
