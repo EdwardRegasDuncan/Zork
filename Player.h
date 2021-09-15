@@ -21,6 +21,7 @@ public:
 public:
 	Location* currentLocation;
 	list<Items*> inventory;
+	int MaxInventorySize;
 
 };
 

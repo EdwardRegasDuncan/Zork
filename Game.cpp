@@ -16,8 +16,12 @@ Game::Game() {
 	House->AddConnection(Forest);
 	Lake->AddConnection(Forest);
 
-	Items* Stick = new Items("stick", "A sturdy looking stick", false);
-	Forest->AddItem(Stick);
+	Items* FireWood = new Items("Log", "A cut piece of fire wood", false);
+	Items* WoodenBox = new Items("Box", "A Wooden box with a lid", true);
+	
+	
+	Forest->AddItem(FireWood);
+	House->AddItem(WoodenBox);
 
 	player = new Player(Forest);
 
@@ -30,6 +34,15 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 
 	Location* currentLocation = player->currentLocation;
 
+	if (Same(args[0], "Help")) {
+		cout << "To play enter an action such as: \n";
+		cout << "Go\n";
+		cout << "Look\n";
+		cout << "Take\n";
+		cout << "Drop\n";
+		cout << "Inventory / Inv / I\n";
+		cout << "Some commands need context, for example: Take Stick or Go House\n";
+	}
 	if (Same(args[0], "go")) {
 		if (args.size() < 2) {
 			cout << "Where do you want to go?\n";
@@ -42,13 +55,16 @@ bool Game::ParseCommand(std::vector<std::string>& args) {
 			return false;
 		}
 		else {
-			cout << "you go to the " << (string)args[1] << "\n";
+			
 			list<Location*> connections = currentLocation->connections;
 			for (Location* location : connections) {
 				if (Same(location->name, args[1])) {
 					player->Go(location);
+					cout << "you go to the " << location->name << "\n";
+					return true;
 				}
 			}
+			cout << "You can't go there\n";
 			return true;
 		}
 	}
